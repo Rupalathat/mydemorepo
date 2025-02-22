@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+
+    environment {
+        // You can define environment variables here
+        MAVEN_HOME = '/usr/local/maven'  // Path to Maven
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from your Git repository
+                git 'https://github.com/your_username/your_repository.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Run the Maven build
+                script {
+                    sh "${MAVEN_HOME}/bin/mvn clean install"
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run tests using Maven
+                script {
+                    sh "${MAVEN_HOME}/bin/mvn test"
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // You can deploy to a server, upload artifacts, etc.
+                echo 'Deploying the application...'
+                // Placeholder for deployment commands
+            }
+        }
+    }
+
+    post {
+        always {
+            // This will always run, even if the build fails
+            echo 'Cleaning up...'
+        }
+        success {
+            // This will run only if the build is successful
+            echo 'Build Successful!'
+        }
+        failure {
+            // This will run only if the build fails
+            echo 'Build Failed!'
+        }
+    }
+}
